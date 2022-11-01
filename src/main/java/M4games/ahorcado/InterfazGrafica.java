@@ -79,8 +79,15 @@ public class InterfazGrafica extends JFrame {
 		vida.setBounds(106, 167, 94, 25);
 		contentPane.add(vida);
 		
+		JLabel botonIntentos = new JLabel("Intentos: 10");
+		botonIntentos.setBounds(179, 550, 84, 13);
+		contentPane.add(botonIntentos);
+		
+		//Evento que muestra las 5 vidas en forma de X's y muestra la palabra y nuestro progreso en ella.
+		//Lo usamos para el botón "Iniciar juego".
 		
 		btnNewButton.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
 				estadoJuego = new GameStatus();
 				vida.setText("X X X X X");
@@ -88,6 +95,8 @@ public class InterfazGrafica extends JFrame {
 			}
 		});
 
+		//For con el que crearemos todos los botones que contienen las letras y a partir de los cuales el código comenzará
+		
 		for (int i = 0; i < 27; i++) {
 
 			int positionx = i % 5;
@@ -100,9 +109,11 @@ public class InterfazGrafica extends JFrame {
 				char letra = (char) (i + 65);
 
 				btn = new JButton("" + letra);
-
+				
 			} else if (i == 14) {
 
+				//Usamos \u00d1 para la letra Ñ
+				
 				btn = new JButton("" + '\u00d1');
 
 			} else {
@@ -111,8 +122,12 @@ public class InterfazGrafica extends JFrame {
 				btn = new JButton("" + letra);
 			}
 
+			//Introducimos la posición de todos los botones que introducen las letras
+			
 			btn.setBounds(20 + (positionx * 43), 324 + (positiony * 43), 46, 22);
 			contentPane.add(btn);
+			
+			//Evento que nos comprueba si adivinamos las letras.
 			
 			btn.addActionListener(new ActionListener() {
 
@@ -120,50 +135,73 @@ public class InterfazGrafica extends JFrame {
 					
 					int rejugar = 0;
 
+					//Este if te comprueba la coincidencia entre la letra del botón pulsado y el contenido de la palabra
+					
 					if (estadoJuego.hayLetra(btn.getText())) {
 
 						txtrHola.setText(estadoJuego.getWordWriting());
 
+					//En caso de no estar dicha letra entra en el else y ocurren varias cosas:
+						
 					} else {
 
+						//Bajamos en 1 el número de intentos disponibles.
+						
 						estadoJuego.setIntentos();
-						System.out.println(estadoJuego.getIntentos());
+						botonIntentos.setText("Intentos: "+estadoJuego.getIntentos());
 
+						//Si los intentos de la palabra actual llegan a 0...
+						
 						if (estadoJuego.getIntentos() == 0) {
+							
 								int vidas = estadoJuego.getLives();
-								System.out.println("vidas iniciales " + estadoJuego.getLives());
+								
+						//Bajamos la vida en 1.
 								
 								estadoJuego.setLives();
 								System.out.println("Has perdido una vida, comienzas con una nueva palabra");
 								
+						//Nos genera una nueva palabra
+								
 								estadoJuego.setWordToGuess();
+								
+						//Y muestra las casillas de la palabra generada.
 								
 								txtrHola.setText(estadoJuego.getWordWriting());
 								
+						//Agarramos las vidas que nos quedan y volvemos a mostrar un número de X como de vidas tengamos.
+								
 								vidas = estadoJuego.getLives();
-								System.out.println("vidas al restar " + estadoJuego.getLives());
+								
 								String stringTexto = vida.getText();
 								
 								vida.setText(stringTexto.substring(0, vidas * 2));
 								
-								System.out.println(stringTexto + "\n" + stringTexto.substring(0, vidas * 2));
+						//Devolvemos los intentos a 10 y volvemos a mostrarlo por pantalla.
+								
 								estadoJuego.resetIntentos();
+								botonIntentos.setText("Intentos: "+estadoJuego.getIntentos());
+								
+						//Al perder todas las vidas perderemos la partida y se nos pedirá si queremos volver a jugar
 								
 							if (vidas==0) {
-								try {
+								
 								JOptionPane.showMessageDialog(null, "Has perdido la partida", "Partida perdida",
 										JOptionPane.ERROR_MESSAGE);
 								rejugar = JOptionPane.showConfirmDialog(null,"¿Quieres volver a jugar?");
 								
+								//En caso de elegir Sí nos reinicia el juego poniendo nuestras vidas a 5.
+								
 									if(rejugar==JOptionPane.YES_OPTION) {
 										estadoJuego = new GameStatus();
 										vida.setText("X X X X X");
+										
+								//Al elegir No o Cancelar saldremos del juego.
+										
 									}else{
 										System.exit(0);
 									}
-								}catch(Exception exc) {
-									
-								}
+								
 							}
 						}
 
