@@ -2,30 +2,26 @@ package M4games.ahorcado;
 
 public class GameStatus {
 
-	private boolean isPlaying = true;
+	private boolean resolver;
+	private int victorias;
 	private int lives;
 	private int intentos;
 	private String wordToGuess;
 	private String wordWriting;
-	private String[] images = { "img1.png", "img0.png" };
+	private String imagesFormat = ".png";
 	// Lista de palabras a adivinar
-	final private String[] words = { "elefant", "criatura", "llapis", "maduixa", "rascacels", "papallona", "abecedari",
-			"fong", "collaret", "trapezista" };
+	final private String[] words = { "elefante", "criatura", "lapiz", "fresa", "rascacielos", "mariposa", "abecedario",
+			"hongo", "collarin", "trapecista", "ara\u00d1a" };
 
 	public GameStatus() {
 
 		//Elegimos con un random la palabra que tendremos que adivinar
-		int num = (int) Math.floor(Math.random() * (words.length));
+		victorias=0;
 		intentos = 10;
 		lives = 5;
-		wordToGuess = words[num];
-		wordWriting = "";
-		//Y mostramos barra baja en lugar de las letras que contiene la palabra
-		for (int i = 0; i < wordToGuess.length(); i++) {
-
-			wordWriting += "_ ";
-
-		}
+		resolver = true;
+		
+		setWordToGuess();
 
 	}
 
@@ -47,17 +43,7 @@ public class GameStatus {
 		return words;
 	}
 
-	public boolean isPlaying() {
 
-		return isPlaying;
-
-	}
-
-	public void setPlaying(boolean isPlaying) {
-
-		this.isPlaying = isPlaying;
-
-	}
 
 	public int getLives() {
 
@@ -83,11 +69,34 @@ public class GameStatus {
 
 	}
 
-	//Método para reiniciar los intentos al iniciar palabra nueva.
+	public void setVictorias() {
+		this.victorias++;
+	}
+
+
+
+	public int getVictorias() {
+		return victorias;
+	}
+
+	
+	//Método para reiniciar los intentos.
 	public void resetIntentos() {
 
 		intentos = 10;
 
+	}
+	
+	public String getImagesFormat() {
+		return imagesFormat;
+	}
+
+	public boolean isResolver() {
+		return resolver;
+	}
+
+	public void setResolver() {
+		this.resolver = false;
 	}
 
 	public String getWordWriting() {
@@ -149,9 +158,12 @@ public class GameStatus {
 
 	}
 
+	
+	//Método que cuenta como solucionada la palabra al no quedar "_", es decir, está adivinada.
+	
 	public boolean isPalabraGuessed() {
 
-		if (wordWriting.indexOf("") != -1) {
+		if (wordWriting.indexOf("_") != -1) {
 
 			return false;
 
@@ -162,4 +174,20 @@ public class GameStatus {
 		}
 
 	}
+	
+	//Método para crear la cadena de texto que representa las vidas.
+	
+	public String textVidas() {
+
+        String text = "";
+
+        for (int i = 0; i < lives; i++) {
+
+            text += "X ";
+
+        }
+
+        return text;
+
+    }
 }
