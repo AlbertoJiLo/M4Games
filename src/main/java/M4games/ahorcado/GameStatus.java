@@ -1,5 +1,8 @@
 package M4games.ahorcado;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class GameStatus {
 
 	private boolean resolver;
@@ -10,25 +13,39 @@ public class GameStatus {
 	private String wordWriting;
 	private String imagesFormat = ".png";
 	// Lista de palabras a adivinar
-	final private String[] words = { "elefante", "criatura", "lapiz", "fresa", "rascacielos", "mariposa", "abecedario",
-			"hongo", "collarin", "trapecista", "ara\u00d1a" };
+	private ArrayList <String> words = new ArrayList<String>(Arrays.asList("elefante", "criatura", "lapiz", "fresa", "rascacielos", "mariposa", "abecedario",
+			"hongo", "collarin", "trapecista", "ara\u00d1a"));
 
+	//Constructor por defecto.
+	
 	public GameStatus() {
 
-		//Elegimos con un random la palabra que tendremos que adivinar
 		victorias=0;
 		intentos = 10;
 		lives = 5;
 		resolver = true;
-		
 		setWordToGuess();
 
 	}
+	
+	//Constructor para mantener el diccionario que hemos añadido a través del menú.
+	
+	public GameStatus(ArrayList<String> arrayActual) {
 
+		words=arrayActual;
+		victorias=0;
+		intentos = 10;
+		lives = 5;
+		resolver = true;
+		setWordToGuess();
+		
+	}
+
+	
 	//Creamos un método que vuelva a crear una palabra a voluntad como hicimos anteriormente
 	public void setWordToGuess() {
-		int num = (int) Math.floor(Math.random() * (words.length));
-		wordToGuess = words[num];
+		int num = (int) Math.floor(Math.random() * (words.size()));
+		wordToGuess = words.get(num);
 		wordWriting = "";
 		for (int i = 0; i < wordToGuess.length(); i++) {
 
@@ -39,11 +56,15 @@ public class GameStatus {
 
 	//Distintos setters y getters
 	
-	public String[] getWords() {
+	public ArrayList<String> getWords() {
 		return words;
 	}
 
-
+	//Método para añadir palabras a las posibilidades.
+	
+	public void addWord(String palabra) {
+		words.add(palabra);
+	}
 
 	public int getLives() {
 
@@ -79,6 +100,7 @@ public class GameStatus {
 		return victorias;
 	}
 
+	
 	
 	//Método para reiniciar los intentos.
 	public void resetIntentos() {

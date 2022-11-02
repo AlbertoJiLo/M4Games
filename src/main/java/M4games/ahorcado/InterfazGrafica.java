@@ -44,6 +44,24 @@ public class InterfazGrafica extends JFrame {
 		
 		JMenuItem botonMenuSalir = new JMenuItem("Salir");
 		mnNewMenu.add(botonMenuSalir);
+		
+		JMenu mnNewMenu_1 = new JMenu("Como jugar");
+		menuBar.add(mnNewMenu_1);
+		
+		JMenuItem botonInstrucciones = new JMenuItem("Instrucciones");
+		mnNewMenu_1.add(botonInstrucciones);
+		
+		JMenu mnNewMenu_2 = new JMenu("Acerca de");
+		menuBar.add(mnNewMenu_2);
+		
+		JMenuItem botonAcercade = new JMenuItem("Acerca de");
+		mnNewMenu_2.add(botonAcercade);
+		
+		JMenu mnNewMenu_3 = new JMenu("Diccionario");
+		menuBar.add(mnNewMenu_3);
+		
+		JMenuItem botonAddWord = new JMenuItem("Añadir palabra");
+		mnNewMenu_3.add(botonAddWord);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -116,7 +134,7 @@ public class InterfazGrafica extends JFrame {
 				rejugar = JOptionPane.showConfirmDialog(null,"¿Estás seguro de que quieres comenzar una partida nueva?");
 				
 					if(rejugar==JOptionPane.YES_OPTION) {
-						estadoJuego = new GameStatus();
+						estadoJuego = new GameStatus(estadoJuego.getWords());
 						vida.setText(estadoJuego.textVidas());
 						txtrHola.setText(estadoJuego.getWordWriting());
 						labelVictorias.setText("Victorias: "+estadoJuego.getVictorias());
@@ -136,6 +154,60 @@ public class InterfazGrafica extends JFrame {
 			}
 		});
 		
+		//Evento para mostrar las instrucciones del juego.
+		
+		botonInstrucciones.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Instrucciones para el ahorcado.\n"
+						+ "El jugador decidirá la dificultad. Dependiendo de la que elija tendrás más o menos intentos.\n"
+						+ "El jugador clicará en una letra para comprobar si está incluida en la palabra.\n"
+						+ "En caso de fallar el ahorcado estará más cerca de morir y tus intentos bajarán.\n"
+						+ "Cada vez que el ahorcado muera perderás una vida. Si pierdes 5 pierdes la partida.\n"
+						+ "EXTRA: A cambio de gastar una vida puedes auto-adivinar una palabra.");
+			}
+		});
+		
+		//Evento para mostrar la información de los alumnos.
+		
+		botonAcercade.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Este juego ha sido creado por el equipo 5 conformado por:\n"
+						+ "Carlos Lafuente\n"
+						+ "Alberto Jiménez\n"
+						+ "Facundo Silva");
+			}
+		});
+		
+		//Evento para añadir palabras al diccionario desde el menú Archivo
+		
+		botonAddWord.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				
+				try {
+					String palabraElegida = JOptionPane.showInputDialog("Escribe la palabra que quieres añadir");
+					String caracteresPermitidos = "abcdefghijklmn\u00f1opqrstuvwxyz";
+					for(int i=0;i<palabraElegida.length();i++) {
+						char letra = palabraElegida.toLowerCase().charAt(i);
+						if(caracteresPermitidos.indexOf(letra) ==-1){
+							throw (new Exception("La palabra que has introducido contiene algun caracter no valido"));
+						}
+					}
+					estadoJuego.addWord(palabraElegida);
+				}catch(Exception ex) {
+					JOptionPane.showMessageDialog(null,ex.getMessage());
+				}
+				
+												
+			}
+		});
+				
+		
+		
 		
 		//Evento que muestra las 5 vidas en forma de X's y muestra la palabra y nuestro progreso en ella.
 		//Lo usamos para el botón "Iniciar juego".
@@ -154,7 +226,7 @@ public class InterfazGrafica extends JFrame {
 						//Reseteamos a los valores del constructor por defecto devolviendo las vidas, intentos, victorias y el
 						//estado del comodín a su estado original.
 						
-						estadoJuego = new GameStatus();
+						estadoJuego = new GameStatus(estadoJuego.getWords());
 						
 						//Y actualizamos el apartado visual para el jugador. Esto incluye botones, labels, 
 						//imagenes y el fondo del comodín
@@ -218,7 +290,22 @@ public class InterfazGrafica extends JFrame {
 					//Reseteamos la imagen del ahorcado.
 					
 					imagenReload(picLabel);
-				
+					
+					if(estadoJuego.getVictorias() == 5) {
+						JOptionPane.showMessageDialog(null, "Enhorabuena, has ganado el juego");
+						int rejugar = JOptionPane.showConfirmDialog(null,"¿Quieres volver a jugar?");
+						
+						//En caso de elegir Sí nos reinicia el juego poniendo nuestras vidas a 5 y las victorias a 0.
+						
+							if(rejugar==JOptionPane.YES_OPTION) {
+								estadoJuego = new GameStatus(estadoJuego.getWords());
+								vida.setText(estadoJuego.textVidas());
+								labelVictorias.setText("Victorias: "+estadoJuego.getVictorias());
+								
+							}else {
+								System.exit(0);
+							}
+					}
 					
 				//En caso de haber usado el comodín nos lo indica.
 					
@@ -296,9 +383,20 @@ public class InterfazGrafica extends JFrame {
 							
 							//En caso de que llevemos 5 victorias indicamos al jugador que ha ganado la partida.
 							
-							if(estadoJuego.getVictorias() == 5) {
+							if(estadoJuego.getVictorias() == 2) {
 								JOptionPane.showMessageDialog(null, "Enhorabuena, has ganado el juego");
-								System.exit(0);
+								rejugar = JOptionPane.showConfirmDialog(null,"¿Quieres volver a jugar?");
+								
+								//En caso de elegir Sí nos reinicia el juego poniendo nuestras vidas a 5 y las victorias a 0.
+								
+									if(rejugar==JOptionPane.YES_OPTION) {
+										estadoJuego = new GameStatus(estadoJuego.getWords());
+										vida.setText(estadoJuego.textVidas());
+										labelVictorias.setText("Victorias: "+estadoJuego.getVictorias());
+										
+									}else {
+										System.exit(0);
+									}
 							}
 						}
 						
@@ -358,7 +456,7 @@ public class InterfazGrafica extends JFrame {
 								//En caso de elegir Sí nos reinicia el juego poniendo nuestras vidas a 5.
 								
 									if(rejugar==JOptionPane.YES_OPTION) {
-										estadoJuego = new GameStatus();
+										estadoJuego = new GameStatus(estadoJuego.getWords());
 										vida.setText(estadoJuego.textVidas());
 										
 								//Al elegir No o Cancelar saldremos del juego.
