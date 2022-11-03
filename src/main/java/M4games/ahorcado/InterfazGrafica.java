@@ -383,7 +383,7 @@ public class InterfazGrafica extends JFrame {
 							
 							//En caso de que llevemos 5 victorias indicamos al jugador que ha ganado la partida.
 							
-							if(estadoJuego.getVictorias() == 2) {
+							if(estadoJuego.getVictorias() == 5) {
 								JOptionPane.showMessageDialog(null, "Enhorabuena, has ganado el juego");
 								rejugar = JOptionPane.showConfirmDialog(null,"¿Quieres volver a jugar?");
 								
