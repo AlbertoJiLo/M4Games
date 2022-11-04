@@ -160,7 +160,7 @@ public class InterfazGrafica extends JFrame {
 
 			public void actionPerformed(ActionEvent e) {
 				JOptionPane.showMessageDialog(null, "Instrucciones para el ahorcado.\n"
-						+ "El jugador decidirá la dificultad. Dependiendo de la que elija tendrás más o menos intentos.\n"
+						+ "El jugador contará con 10 intentos en total.\n"
 						+ "El jugador clicará en una letra para comprobar si está incluida en la palabra.\n"
 						+ "En caso de fallar el ahorcado estará más cerca de morir y tus intentos bajarán.\n"
 						+ "Cada vez que el ahorcado muera perderás una vida. Si pierdes 5 pierdes la partida.\n"
